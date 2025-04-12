@@ -47,34 +47,18 @@ function Page() {
   useEffect(() => {
     getInterviewDetails();
   }, []);
-
   useEffect(() => {
     return () => {
-      window.speechSynthesis.cancel();
-      setIsSpeaking(false);
+      if (typeof window !== "undefined") {
+        window.speechSynthesis.cancel();
+        setIsSpeaking(false);
+      }
     };
   }, [activeQuestionIndex]);
-
-  const getInterviewDetails = async () => {
-    try {
-      const result = await db
-        .select()
-        .from(MockInterview)
-        .where(eq(MockInterview.mockId, interviewId.trim()));
-      if (result.length > 0) {
-        const jsonMockResp = JSON.parse(result[0].jsonMockResp);
-        setMockInterviewQuestion(jsonMockResp);
-        setInterviewData(result[0]);
-      } else {
-        toast.error('Interview not found.');
-      }
-    } catch (err) {
-      console.error('Error fetching interview details:', err);
-      toast.error('Failed to load interview questions. Please try again.');
-    }
-  };
-
+  
   const speakQuestion = () => {
+    if (typeof window === "undefined") return;
+  
     if (isSpeaking) {
       window.speechSynthesis.cancel();
       setIsSpeaking(false);
@@ -89,28 +73,35 @@ function Page() {
       setIsSpeaking(true);
     }
   };
-
+  
   const handleNext = () => {
     if (mockInterviewQuestion && activeQuestionIndex < mockInterviewQuestion.length - 1) {
-      window.speechSynthesis.cancel();
-      setIsSpeaking(false);
+      if (typeof window !== "undefined") {
+        window.speechSynthesis.cancel();
+        setIsSpeaking(false);
+      }
       setActiveQuestionIndex(activeQuestionIndex + 1);
     }
   };
-
+  
   const handlePrevious = () => {
     if (activeQuestionIndex > 0) {
-      window.speechSynthesis.cancel();
-      setIsSpeaking(false);
+      if (typeof window !== "undefined") {
+        window.speechSynthesis.cancel();
+        setIsSpeaking(false);
+      }
       setActiveQuestionIndex(activeQuestionIndex - 1);
     }
   };
-
+  
   const handleQuestionSelect = (index) => {
-    window.speechSynthesis.cancel();
-    setIsSpeaking(false);
+    if (typeof window !== "undefined") {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+    }
     setActiveQuestionIndex(index);
   };
+  
 
   const SaveUserAnswer = async () => {
     if (isRecording) {
