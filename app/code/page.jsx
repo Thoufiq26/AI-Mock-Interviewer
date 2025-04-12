@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import Editor from "@monaco-editor/react";
 import axios from "axios";
@@ -55,12 +56,12 @@ const CodeEditor = () => {
         if (result.data.status.id <= 2) {
           setTimeout(checkStatus, 1000);
         } else {
-          const output =
+          const resultOutput =
             result.data.stdout ||
             result.data.stderr ||
             result.data.compile_output ||
-            "";
-          setOutput(output);
+            "No output";
+          setOutput(resultOutput);
           setIsLoading(false);
         }
       };
@@ -68,58 +69,62 @@ const CodeEditor = () => {
       checkStatus();
     } catch (error) {
       console.error(error);
-      setOutput("Error");
+      setOutput("An error occurred while compiling the code.");
       setIsLoading(false);
     }
   };
 
   return (
-    <div>
-        <Header/>
-    <div className="p-4 bg-gray-900 rounded-xl text-white">
-      <div className="mb-2 flex items-center gap-2">
-        <label>Language:</label>
-        <select
-          className="p-1 rounded bg-gray-800 text-white"
-          onChange={(e) => setLanguage(e.target.value)}
-          value={language}
+    <div className="min-h-screen bg-black text-white">
+      <Header />
+      <div className="max-w-6xl mx-auto p-4">
+        {/* Language Selection */}
+        <div className="mb-4 flex items-center gap-3">
+          <label className="text-sm font-medium">Language:</label>
+          <select
+            className="p-2 rounded bg-gray-800 text-white"
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+          >
+            <option value="python">Python</option>
+            <option value="cpp">C++</option>
+            <option value="java">Java</option>
+            <option value="c">C</option>
+          </select>
+        </div>
+
+        {/* Code Editor */}
+        <Editor
+          height="350px"
+          language={language}
+          value={code}
+          onChange={(value) => setCode(value || "")}
+          theme="vs-dark"
+          className="rounded mb-3"
+        />
+
+        {/* Input */}
+        <textarea
+          className="w-full h-20 p-2 mb-4 rounded bg-gray-900 text-white"
+          placeholder="Enter input (if any)"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+
+        {/* Run Button */}
+        <button
+          onClick={handleRun}
+          className="bg-purple-600 px-4 py-2 rounded hover:bg-purple-700 transition-all"
         >
-          <option value="python">Python</option>
-          <option value="cpp">C++</option>
-          <option value="java">Java</option>
-          <option value="c">C</option>
-        </select>
+          {isLoading ? "Running..." : "Run Code"}
+        </button>
+
+        {/* Output */}
+        <div className="mt-5 bg-gray-800 p-4 rounded">
+          <h4 className="font-semibold mb-2">Output:</h4>
+          <pre className="text-green-300 whitespace-pre-wrap">{output}</pre>
+        </div>
       </div>
-
-      <Editor
-        height="300px"
-        defaultLanguage={language}
-        language={language}
-        value={code}
-        onChange={(value) => setCode(value || "")}
-        theme="vs-dark"
-        className="rounded"
-      />
-
-      <textarea
-        className="w-full h-20 p-2 mt-3 rounded bg-black text-white"
-        placeholder="Input"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-      ></textarea>
-
-      <button
-        onClick={handleRun}
-        className="mt-3 bg-purple-600 px-4 py-2 rounded hover:bg-purple-700"
-      >
-        {isLoading ? "Running..." : "Run Code"}
-      </button>
-
-      <div className="mt-4 bg-gray-800 p-3 rounded">
-        <h4 className="font-semibold mb-2">Output:</h4>
-        <pre className="text-green-300 whitespace-pre-wrap">{output}</pre>
-      </div>
-    </div>
     </div>
   );
 };

@@ -258,7 +258,7 @@ const SubjectResources = () => {
             <h2 className="text-lg font-semibold text-center text-white mb-4">
               {subject.name}
             </h2>
-            <ul className="space-y-2 text-sm text-purple-300 text-center">
+            <ul className="space-y-2 text-sm text-purple-300 text-left">
               {subject.links.map((link, i) => (
                 <li key={i}>
                   <a
