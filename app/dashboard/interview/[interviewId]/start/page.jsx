@@ -196,7 +196,7 @@ function Page() {
 
   const handleSubmit = () => {
     if (isSaving) return;
-    router.push(`/dashboard/interview/${interviewId}/feedback`);
+    router.push(`/dashboard/interview/${interviewId}/results`);
   };
 
   const buttonStyles =
