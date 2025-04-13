@@ -1,4 +1,4 @@
-#Mocksy - AI-Powered Mock Interview Platform#
+# Mocksy - AI-Powered Mock Interview Platform <br>
 Mocksy is an innovative platform designed to help users practice AI-powered mock interviews, sharpen coding skills, and prepare for job applications all in one place. With a variety of features, including live AI interviews with camera and microphone support, users can practice and improve their performance with real-time feedback and ratings.
 
 +Features
